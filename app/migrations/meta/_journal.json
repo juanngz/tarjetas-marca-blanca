@@ -1,0 +1,97 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1791311781193,
+      "tag": "0000_inicial",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1791322523514,
+      "tag": "0001_equipo-con-email-y-baja-sin-sesiones",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1791326108110,
+      "tag": "0002_deshacer-como-movimiento",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1791327035472,
+      "tag": "0003_saldo-de-la-tarjeta",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1791342317078,
+      "tag": "0004_code-in-english",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1791342850049,
+      "tag": "0005_audit-dates",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1791467978549,
+      "tag": "0006_name-search",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1791495005843,
+      "tag": "0007_staff-audit",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1791514760158,
+      "tag": "0008_reward-with-the-last-stamp",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1791570955205,
+      "tag": "0009_unknown-email-attempts",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1791579835583,
+      "tag": "0010_drop-unknown-email-attempts",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1791677098503,
+      "tag": "0011_reward-with-the-seventh-stamp",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1791949202666,
+      "tag": "0012_every-customer-has-the-kilo-card",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Dependencias y compilados
+node_modules/
+dist/
+build/
+.svelte-kit/
+.react-router/
+.astro/
+
+# Cloudflare
+.wrangler/
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# Secretos
+.env
+.env.*
+!.env.example
+
+# Registros
+*.log

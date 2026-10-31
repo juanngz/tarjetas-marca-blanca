@@ -1,0 +1,53 @@
+{
+  "name": "loyalty-club",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "dev": "react-router dev",
+    "build": "react-router build",
+    "typegen": "wrangler types && react-router typegen",
+    "typecheck": "npm run typegen && tsc -b",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "vitest run --passWithNoTests",
+    "test:e2e": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local -c wrangler.jsonc",
+    "db:reset": "node scripts/db-reset.mjs",
+    "db:seed": "node --import tsx scripts/seed.mjs",
+    "staff:create": "node --import tsx scripts/staff.mjs create",
+    "staff:change-pin": "node --import tsx scripts/staff.mjs change-pin",
+    "tokens": "node --import tsx scripts/tokens.mjs",
+    "icons": "node --import tsx scripts/icons.mjs",
+    "brand": "npm run tokens && npm run icons"
+  },
+  "dependencies": {
+    "@yudiel/react-qr-scanner": "2.6.0",
+    "drizzle-orm": "0.45.3",
+    "isbot": "5.2.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-router": "7.18.4",
+    "uqr": "0.1.3",
+    "zxing-wasm": "3.1.3"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@biomejs/biome": "2.5.15",
+    "@cloudflare/vite-plugin": "1.62.5",
+    "@playwright/test": "1.64.0",
+    "@react-router/dev": "7.18.4",
+    "@react-router/fs-routes": "7.18.4",
+    "@types/node": "24.19.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "drizzle-kit": "0.31.11",
+    "esbuild": "0.28.2",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vite": "7.3.6",
+    "vitest": "5.0.3",
+    "wrangler": "4.147.0"
+  }
+}

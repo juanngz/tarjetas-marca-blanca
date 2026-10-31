@@ -1,0 +1,1247 @@
+/* Base styles of the app, on top of tokens.css (the café's theme, from marca/tokens.json).
+   Every color, font and size comes from the tokens: to dress the app for a café, change the tokens, not this
+   file. Soft physical depth for what you hold (cards, buttons, sheets), the display family for what's said
+   big and the sans family for what's read. Text never under 16px and nothing tappable under 48px. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Only the light theme, even on a phone in dark mode: no browser darkens the page on its own (root.tsx). */
+  color-scheme: only light;
+
+  /* Motion: strong ease-out to respond and appear; the iOS drawer curve for what slides. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --linea: color-mix(in srgb, var(--filete) 70%, transparent);
+
+  /* Depth: soft shadows, tinted with the theme's sombra and sombra-tinte, like an object on a counter. */
+  --sombra-1:
+    0 1px 2px color-mix(in srgb, var(--sombra) 6%, transparent),
+    0 2px 6px -2px color-mix(in srgb, var(--sombra) 8%, transparent);
+  --sombra-2:
+    0 1px 2px color-mix(in srgb, var(--sombra) 6%, transparent),
+    0 10px 24px -12px color-mix(in srgb, var(--sombra-tinte) 28%, transparent);
+  --sombra-3:
+    0 1px 1px color-mix(in srgb, var(--sombra) 8%, transparent),
+    0 12px 24px -10px color-mix(in srgb, var(--sombra-tinte) 32%, transparent),
+    0 32px 56px -28px color-mix(in srgb, var(--sombra) 42%, transparent);
+  --sombra-boton:
+    inset 0 1px 0 rgb(255 255 255 / 0.1),
+    0 1px 2px color-mix(in srgb, var(--sombra) 20%, transparent),
+    0 8px 18px -8px color-mix(in srgb, var(--sombra) 55%, transparent);
+}
+
+/* Samsung Internet darkens on its own the pages that don't answer to dark mode, even with only light: this
+   answer, the same light theme, tells it the app already handles it (23/10/2026). */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: only light;
+  }
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+  background:
+    radial-gradient(120% 40rem at 50% -10%, var(--fondo-elevado) 0%, transparent 60%),
+    radial-gradient(90% 40rem at 110% 100%, var(--fondo-tono) 0%, transparent 70%), var(--fondo);
+}
+
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: clip;
+  color: var(--tinta);
+  font-family: var(--sans);
+  font-size: var(--app-cuerpo-size);
+  line-height: var(--app-cuerpo-line-height);
+  font-weight: var(--app-cuerpo-weight);
+  overflow-wrap: break-word;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* The theme's texture over everything, fixed: it never moves with the content. None unless the theme has one
+   (the textura token, a tile: url("…")). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--textura);
+  opacity: var(--textura-opacidad);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--premio);
+  color: var(--tinta-fuerte);
+}
+
+/* Focus is always visible, never removed. */
+:focus-visible {
+  outline: var(--trazo-foco) solid var(--foco);
+  outline-offset: 2px;
+}
+
+/* ───────────────────────── Screen ───────────────────────── */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  margin: 0 auto;
+  padding: var(--espacio-12) var(--espacio-6) calc(var(--espacio-8) + env(safe-area-inset-bottom));
+  animation: screen-in 360ms var(--ease-out) backwards;
+}
+
+@keyframes screen-in {
+  from {
+    transform: translateY(8px);
+  }
+}
+
+@media (max-width: 359px) {
+  .screen {
+    padding-inline: var(--espacio-4);
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.intro--centered {
+  align-items: center;
+  text-align: center;
+}
+
+/* A small label over a title: what part of the place you're in. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  font-family: var(--display);
+  font-size: 1rem;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 20px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.intro--centered .eyebrow::after {
+  content: "";
+  width: 20px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.title {
+  font-family: var(--display);
+  font-size: var(--app-titulo-size);
+  line-height: var(--app-titulo-line-height);
+  font-weight: var(--app-titulo-weight);
+  letter-spacing: -0.01em;
+  color: var(--tinta-fuerte);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.title--xl {
+  font-size: min(2.375rem, 10vw);
+  line-height: 1.08;
+}
+
+.lede {
+  font-size: var(--app-cuerpo-grande-size);
+  line-height: 1.5;
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+}
+
+/* The Club's name, big: uppercase and the key word in italics (cafes/, club.highlight). */
+.brand-title {
+  font-family: var(--display);
+  font-size: min(3rem, 13vw);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--tinta-fuerte);
+}
+
+.brand-title em {
+  display: block;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--acento);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.unit {
+  display: inline-block;
+}
+
+.secondary {
+  color: var(--tinta-suave);
+}
+
+.note {
+  font-size: var(--app-nota-size);
+  line-height: var(--app-nota-line-height);
+  font-weight: var(--app-nota-weight);
+  font-style: var(--app-nota-style);
+  color: var(--tinta-suave);
+}
+
+.label {
+  font-family: var(--display);
+  font-size: max(var(--app-etiqueta-size), 1rem);
+  line-height: var(--app-etiqueta-line-height);
+  font-weight: var(--app-etiqueta-weight);
+  letter-spacing: var(--app-etiqueta-tracking);
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-family: var(--display);
+  font-size: var(--app-subtitulo-size);
+  line-height: var(--app-subtitulo-line-height);
+  font-weight: var(--app-subtitulo-weight);
+  color: var(--tinta-fuerte);
+}
+
+/* A divider: two hairlines and a small mark between them. */
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  color: var(--filete);
+}
+
+.ornament::before,
+.ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+}
+
+.ornament svg {
+  color: var(--acento);
+  opacity: 0.7;
+}
+
+/* A raised paper panel: forms and lists that sit on the page. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+  padding: var(--espacio-6);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: var(--radio-grande);
+  background: color-mix(in srgb, var(--fondo-elevado) 88%, transparent);
+  box-shadow: var(--sombra-2);
+}
+
+@media (max-width: 359px) {
+  .panel {
+    padding: var(--espacio-4);
+  }
+}
+
+/* ───────────────────────── Buttons ───────────────────────── */
+
+.button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-3);
+  width: 100%;
+  min-height: var(--toque-principal);
+  padding: 0 var(--espacio-6);
+  border: var(--trazo-campo) solid transparent;
+  border-radius: var(--radio-medio);
+  background: linear-gradient(180deg, var(--accion-claro) 0%, var(--accion) 100%);
+  color: var(--sobre-accion);
+  box-shadow: var(--sombra-boton);
+  font-family: var(--sans);
+  font-size: var(--app-boton-size);
+  line-height: var(--app-boton-line-height);
+  font-weight: var(--app-boton-weight);
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    transform 120ms var(--ease-out),
+    box-shadow 160ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out);
+}
+
+.button:active {
+  transform: scale(0.97);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      0 1px 2px color-mix(in srgb, var(--sombra) 20%, transparent),
+      0 12px 24px -10px color-mix(in srgb, var(--sombra) 60%, transparent);
+  }
+}
+
+/* The arrow of a step forward: it moves a little when pressed. */
+.button__arrow {
+  flex: none;
+  transition: transform 160ms var(--ease-out);
+}
+
+.button:active .button__arrow {
+  transform: translateX(3px);
+}
+
+/* For what ends something, like Salir: the theme's red, the same as the errors, with sobre-accion on it. */
+.button--danger {
+  background: linear-gradient(180deg, var(--error-claro) 0%, var(--error) 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    0 1px 2px color-mix(in srgb, var(--sombra) 20%, transparent),
+    0 8px 18px -8px color-mix(in srgb, var(--error) 70%, transparent);
+}
+
+.button--secondary {
+  border-color: var(--borde-campo);
+  background: transparent;
+  color: var(--tinta-fuerte);
+  box-shadow: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button--secondary:hover {
+    border-color: var(--tinta-fuerte);
+    background: color-mix(in srgb, var(--tinta-fuerte) 4%, transparent);
+    box-shadow: none;
+  }
+}
+
+.button--on-card {
+  background: var(--tarjeta-texto);
+  color: var(--tinta-fuerte);
+  box-shadow:
+    inset 0 -2px 0 color-mix(in srgb, var(--sombra) 8%, transparent),
+    0 6px 16px -8px rgb(0 0 0 / 0.6);
+}
+
+/* The second button on a card, its outline: in the card's text color, like its text (18/10/2026: Sumar sello y
+   guardarlo, under Canjear premio). */
+.button--secondary-on-card {
+  border-color: var(--tarjeta-texto);
+  background: transparent;
+  color: var(--tarjeta-texto);
+  box-shadow: none;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.actions > form {
+  display: flex;
+  flex-direction: column;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  align-self: center;
+  min-height: var(--toque-minimo);
+  padding: 0 var(--espacio-4);
+  color: var(--tinta-fuerte);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--premio);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  touch-action: manipulation;
+  transition: text-decoration-color 160ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    text-decoration-color: var(--tinta-fuerte);
+  }
+}
+
+/* ───────────────────────── Forms ───────────────────────── */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.field-label {
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+/* The label sits right on top of its field. */
+.field-label + .field,
+.field-label + .field-with-action {
+  margin-top: calc(-1 * var(--espacio-2));
+}
+
+.field {
+  width: 100%;
+  min-height: var(--campo-alto);
+  padding: 0 var(--espacio-4);
+  border: var(--trazo-campo) solid var(--borde-campo);
+  border-radius: var(--radio-medio);
+  background: var(--superficie);
+  color: var(--tinta-fuerte);
+  box-shadow: inset 0 2px 3px color-mix(in srgb, var(--sombra-tinte) 6%, transparent);
+  font-family: var(--sans);
+  font-size: var(--app-cuerpo-grande-size);
+  font-weight: 500;
+  transition:
+    border-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+
+.field--code {
+  font-size: var(--app-codigo-size);
+  font-weight: var(--app-codigo-weight);
+  letter-spacing: var(--app-codigo-tracking);
+  font-variant-numeric: tabular-nums;
+}
+
+.field::placeholder {
+  color: var(--tinta-suave);
+  font-size: var(--app-cuerpo-grande-size);
+  font-weight: 400;
+  letter-spacing: normal;
+  opacity: 0.85;
+}
+
+.field:focus {
+  border-color: var(--tinta-fuerte);
+  box-shadow:
+    inset 0 2px 3px color-mix(in srgb, var(--sombra-tinte) 6%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--premio) 45%, transparent);
+  outline: none;
+}
+
+.field:focus-visible {
+  outline: none;
+}
+
+.field[aria-invalid="true"] {
+  border: 2px solid var(--error);
+}
+
+.field[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--error) 22%, transparent);
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-3);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-medio);
+  animation: fade-up 240ms var(--ease-out);
+}
+
+.alert svg {
+  flex-shrink: 0;
+}
+
+.alert--error {
+  border: 1px solid color-mix(in srgb, var(--error) 22%, transparent);
+  background: var(--error-suave);
+  color: var(--error);
+}
+
+.alert--error p {
+  color: var(--tinta);
+}
+
+.alert--info {
+  border: 1px solid var(--linea);
+  background: var(--fondo-tono);
+  color: var(--tinta);
+}
+
+@keyframes fade-up {
+  from {
+    transform: translateY(4px);
+  }
+}
+
+.consent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-medio);
+  background: var(--fondo-tono);
+}
+
+.consent__lock {
+  display: flex;
+  gap: var(--espacio-3);
+  align-items: flex-start;
+}
+
+.consent__lock span {
+  min-width: 0;
+}
+
+.consent__lock svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--acento);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  min-height: var(--toque-minimo);
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+  cursor: pointer;
+}
+
+.checkbox input {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  accent-color: var(--accion);
+}
+
+.checkbox input[aria-invalid="true"] {
+  outline: 2px solid var(--error);
+  outline-offset: 2px;
+}
+
+.inline-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: var(--toque-minimo);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--tinta-fuerte);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--premio);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  cursor: pointer;
+}
+
+.long-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding-bottom: var(--espacio-2);
+}
+
+.turnstile:empty {
+  display: none;
+}
+
+.offline-notice {
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  margin: 0 auto;
+  padding: calc(var(--espacio-3) + env(safe-area-inset-top)) var(--espacio-4) 0;
+}
+
+/* ───────────────────────── Welcome ───────────────────────── */
+
+.screen--welcome {
+  gap: var(--espacio-8);
+  padding-top: calc(var(--espacio-8) + env(safe-area-inset-top));
+}
+
+.welcome-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+/* The café's symbol (brand/symbol.svg), big and faint behind the title. */
+.welcome-hero__symbol {
+  position: absolute;
+  top: -12px;
+  right: -40px;
+  width: 210px;
+  height: auto;
+  opacity: 0.09;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.brand-badge {
+  width: 84px;
+  height: 84px;
+  margin-bottom: var(--espacio-2);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+
+/* The three cards, fanned out like on the counter: only to look at. */
+.card-fan {
+  position: relative;
+  height: 156px;
+  margin: 0 auto;
+  width: min(100%, 320px);
+}
+
+.card-fan__card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 188px;
+  height: 118px;
+  padding: var(--espacio-3) var(--espacio-4);
+  border-radius: var(--radio-medio);
+  box-shadow: var(--sombra-3);
+  transform-origin: 50% 120%;
+  animation: fan-in 700ms var(--ease-out) both;
+}
+
+.card-fan__card img {
+  width: 22px;
+  height: 33px;
+}
+
+.card-fan__wordmark {
+  width: 76px;
+  height: auto;
+  opacity: 0.9;
+}
+
+.card-fan__card:nth-child(1) {
+  --rot: -14deg;
+  --x: -78%;
+  --y: 22px;
+  animation-delay: 80ms;
+}
+
+.card-fan__card:nth-child(2) {
+  --rot: 12deg;
+  --x: -22%;
+  --y: 22px;
+  animation-delay: 160ms;
+}
+
+.card-fan__card:nth-child(3) {
+  --rot: -1deg;
+  --x: -50%;
+  --y: 4px;
+  animation-delay: 240ms;
+}
+
+.card-fan__card {
+  transform: translate(var(--x), var(--y)) rotate(var(--rot));
+}
+
+@keyframes fan-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 24px) rotate(0deg);
+  }
+}
+
+.card-fan__dots {
+  display: flex;
+  gap: 4px;
+}
+
+.card-fan__dots span {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  opacity: 0.7;
+}
+
+.card-fan__dots span:nth-child(-n + 3) {
+  background: currentColor;
+  opacity: 1;
+}
+
+.site-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding-top: var(--espacio-4);
+  color: var(--tinta-suave);
+  text-align: center;
+}
+
+.site-foot img {
+  width: 64px;
+  height: auto;
+  opacity: 0.55;
+}
+
+.site-foot p {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.site-foot strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tinta);
+}
+
+/* The document to confirm: like the short code, but bigger. */
+.big-number {
+  padding: var(--espacio-4) var(--espacio-2);
+  border: 1.5px dashed var(--borde-campo);
+  border-radius: var(--radio-medio);
+  background: var(--superficie);
+  font-family: var(--sans);
+  font-size: min(var(--titulo-pieza-size), 13vw);
+  line-height: var(--app-codigo-line-height);
+  font-weight: var(--app-codigo-weight);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-fuerte);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+/* Step 2 of 2: two small bars over the title. */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  color: var(--tinta-suave);
+  font-size: 1rem;
+}
+
+.steps__bars {
+  display: flex;
+  gap: 6px;
+}
+
+.steps__bars span {
+  width: 28px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--tinta-fuerte);
+}
+
+.steps__bars span:last-child {
+  background: var(--acento);
+}
+
+/* ───────────────────────── Bars ───────────────────────── */
+
+.top-bar {
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  margin: 0 auto;
+  padding: calc(var(--espacio-3) + env(safe-area-inset-top)) var(--espacio-4) 0;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  min-height: var(--toque-minimo);
+  padding: 0 var(--espacio-3) 0 var(--espacio-2);
+  border-radius: var(--radio-total);
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: background-color 160ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back:hover {
+    background: color-mix(in srgb, var(--tinta-fuerte) 6%, transparent);
+  }
+}
+
+.screen--with-back {
+  padding-top: var(--espacio-4);
+}
+
+/* The header with the logo: it stays on top while scrolling, frosted, so the cards pass under it. */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  margin: 0 auto;
+  background: color-mix(in srgb, var(--fondo) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom: 1px solid transparent;
+}
+
+.header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3) var(--espacio-4);
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  margin: 0 auto;
+  padding: calc(var(--espacio-3) + env(safe-area-inset-top)) var(--espacio-6) var(--espacio-3);
+}
+
+@supports (animation-timeline: scroll()) {
+  .header {
+    animation: header-line linear both;
+    animation-timeline: scroll();
+    animation-range: 0 48px;
+  }
+
+  @keyframes header-line {
+    to {
+      border-bottom-color: var(--linea);
+    }
+  }
+}
+
+@media (max-width: 359px) {
+  .header__inner {
+    padding-inline: var(--espacio-4);
+  }
+}
+
+.header-action {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  min-height: var(--toque-minimo);
+  padding: 0 var(--espacio-4);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-total);
+  background: color-mix(in srgb, var(--fondo-elevado) 70%, transparent);
+  color: var(--tinta);
+  box-shadow: var(--sombra-1);
+  font-family: var(--sans);
+  font-size: var(--app-dato-size);
+  line-height: 1;
+  font-weight: var(--app-boton-weight);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.header-action,
+.button--hover {
+  --pressed: color-mix(in srgb, var(--fondo-hundido), var(--tinta-fuerte) 8%);
+  transition:
+    transform 120ms var(--ease-out),
+    background-color 150ms var(--ease-out),
+    border-color 150ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .header-action:hover,
+  .button--hover:hover {
+    border-color: var(--tinta-fuerte);
+    background: var(--pressed);
+  }
+}
+
+.header-action:active,
+.button--hover:active {
+  border-color: var(--tinta-fuerte);
+  background: var(--pressed);
+  transform: scale(0.97);
+}
+
+.header + .screen {
+  padding-top: var(--espacio-6);
+}
+
+.header__home {
+  display: flex;
+  align-items: center;
+  min-height: var(--toque-minimo);
+  flex: 0 1 auto;
+  min-width: min(140px, 100%);
+  border-radius: var(--radio-chico);
+}
+
+.header__home img {
+  flex: 0 1 auto;
+  min-width: 0;
+  width: 178px;
+  height: auto;
+}
+
+/* ───────────────────────── Sheets ───────────────────────── */
+
+.sheet {
+  position: fixed;
+  inset: auto 0 0;
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  max-height: 90dvh;
+  overflow-y: auto;
+  margin: 0 auto;
+  padding: var(--espacio-8) var(--espacio-6) calc(var(--espacio-8) + env(safe-area-inset-bottom));
+  border: 0;
+  border-radius: 28px 28px 0 0;
+  background:
+    radial-gradient(100% 40% at 50% 0%, var(--superficie) 0%, transparent 100%),
+    var(--fondo-elevado);
+  color: var(--tinta-fuerte);
+  box-shadow: 0 -20px 50px -20px color-mix(in srgb, var(--sombra) 45%, transparent);
+  transform: translateY(100%);
+  transition:
+    transform 200ms var(--ease-drawer),
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+}
+
+/* The grabber: says it's a sheet, over the content. */
+.sheet::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 40px;
+  height: 5px;
+  border-radius: 5px;
+  background: var(--filete);
+  transform: translateX(-50%);
+}
+
+.sheet[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+  transform: translateY(0);
+  transition-duration: 380ms;
+}
+
+@starting-style {
+  .sheet[open] {
+    transform: translateY(100%);
+  }
+}
+
+.sheet::backdrop {
+  background: color-mix(in srgb, var(--tinta-fuerte) 55%, transparent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition:
+    opacity 200ms,
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+}
+
+.sheet[open]::backdrop {
+  opacity: 1;
+  transition-duration: 320ms;
+}
+
+@starting-style {
+  .sheet[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+.sheet:focus-visible {
+  outline: none;
+}
+
+html:has(.sheet[open]) {
+  overflow: hidden;
+}
+
+@media (max-width: 359px) {
+  .sheet {
+    padding-inline: var(--espacio-4);
+  }
+}
+
+/* An icon in a soft circle at the top of a sheet or a confirmation: what kind of news it is. */
+.medallion {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--fondo-tono);
+  color: var(--acento);
+}
+
+.medallion svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* ───────────────────────── Bottom bar ───────────────────────── */
+
+.bottom-bar {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  padding: var(--espacio-3) var(--espacio-6) calc(var(--espacio-3) + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--linea);
+  background: color-mix(in srgb, var(--fondo) 84%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
+}
+
+.bottom-bar__button {
+  max-width: calc(var(--ancho-lectura) - 2 * var(--espacio-6));
+  background: color-mix(in srgb, var(--fondo-elevado) 80%, transparent);
+}
+
+.screen--bottom-bar {
+  padding-bottom: calc(
+    var(--toque-principal) +
+    2 *
+    var(--espacio-3) +
+    var(--espacio-8) +
+    env(safe-area-inset-bottom)
+  );
+}
+
+@media (max-width: 359px) {
+  .bottom-bar {
+    padding-inline: var(--espacio-4);
+  }
+}
+
+/* ───────────────────────── Reduced motion ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .alert,
+  .card-fan__card {
+    animation: none;
+  }
+
+  .sheet,
+  .sheet[open] {
+    transform: none;
+    transition-duration: 200ms;
+  }
+
+  .sheet {
+    opacity: 0;
+    transition-property: opacity, overlay, display;
+  }
+
+  .sheet[open] {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .sheet[open] {
+      opacity: 0;
+    }
+  }
+
+  .sheet[open]::backdrop {
+    transition-duration: 200ms;
+  }
+
+  .button,
+  .header-action {
+    transition: none;
+  }
+
+  .button:active,
+  .header-action:active {
+    transform: none;
+  }
+}
+
+.sheet > .medallion {
+  align-self: center;
+}
+
+/* Said to screen readers, not shown. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ───────────────────────── Salir ───────────────────────── */
+
+/* The question to sign out, in a sheet over the wallet or on its own screen: the pocket on top, the words
+   centered, Salir and the way to stay at the thumb. */
+.sign-out {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+}
+
+.sign-out .actions,
+.sign-out__stay {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The three cards slipping into a paper pocket, one after another, as the sheet comes up. */
+.pocket {
+  position: relative;
+  align-self: center;
+  width: 196px;
+  height: 128px;
+}
+
+.pocket__card {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  width: 116px;
+  height: 74px;
+  border-radius: 12px;
+  box-shadow: var(--sombra-2);
+  transform: translateX(calc(-50% + var(--x))) rotate(var(--rot));
+  animation: tuck-in 640ms var(--ease-out) backwards;
+}
+
+.pocket__card:nth-child(1) {
+  --x: -30px;
+  --rot: -10deg;
+}
+
+.pocket__card:nth-child(2) {
+  --x: 28px;
+  --rot: 9deg;
+  animation-delay: 90ms;
+}
+
+.pocket__card:nth-child(3) {
+  --x: 0px;
+  --rot: -1deg;
+  bottom: 22px;
+  animation-delay: 180ms;
+}
+
+@keyframes tuck-in {
+  from {
+    transform: translate(calc(-50% + var(--x)), -44px) rotate(calc(var(--rot) * 2.2));
+  }
+}
+
+/* The pocket: a sleeve with a stitched edge, the café's symbol printed on it. */
+.pocket__sleeve {
+  position: absolute;
+  inset: auto 0 0;
+  display: grid;
+  place-items: center;
+  height: 66px;
+  border-radius: 10px 10px 18px 18px;
+  background: linear-gradient(180deg, var(--fondo-tono-fuerte), var(--fondo-tono));
+  box-shadow:
+    inset 0 0 0 5px var(--fondo-tono-fuerte),
+    inset 0 0 0 6.5px color-mix(in srgb, var(--acento) 35%, transparent),
+    0 10px 20px -12px color-mix(in srgb, var(--sombra-tinte) 50%, transparent);
+}
+
+.pocket__sleeve img {
+  width: 44px;
+  height: auto;
+  opacity: 0.45;
+}
+
+.sheet--sign-out {
+  gap: var(--espacio-6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pocket__card {
+    animation: none;
+  }
+}

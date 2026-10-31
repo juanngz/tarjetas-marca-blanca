@@ -1,0 +1,58 @@
+// Cloudflare config: two environments. See ../docs/implementacion/ci-cd.md
+// - prod (top level): Worker "club" + database "club-prod".
+// - dev (env.dev): Worker "club-dev" + database "club-dev". Chosen with CLOUDFLARE_ENV=dev at build time.
+// For a new café: change the names (one pair per café), and put its database IDs and its Turnstile key
+// (../marca/README.md, "Puesta en marcha"). Locally none of them are needed. Database IDs aren't secret. The keys (DNI_HMAC_KEY, PIN_HMAC_KEY, CUSTOMER_SESSION_KEY, STAFF_SESSION_KEY,
+// TURNSTILE_SECRET_KEY) go in with `wrangler secret put`.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "club",
+  "main": "./workers/app.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Until there's a domain, prod lives at club.<account>.workers.dev.
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true },
+  "upload_source_maps": true,
+  // Public key of the café's Turnstile widget (not secret). Locally, .dev.vars sets the test one.
+  "vars": { "TURNSTILE_SITE_KEY": "REPLACE_WITH_TURNSTILE_SITE_KEY" },
+  // Cap on document attempts per connection: platform/security/rateLimit.server.ts
+  "ratelimits": [
+    { "name": "SIGN_IN_LIMIT", "namespace_id": "1001", "simple": { "limit": 30, "period": 60 } }
+  ],
+  // The sello en vivo: one Durable Object per card (platform/live/). SQLite-backed, the only kind the free
+  // plan has; it stores nothing. A new class needs a new migration tag.
+  "durable_objects": { "bindings": [{ "name": "CARD_WATCH", "class_name": "CardWatch" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CardWatch"] }],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "club-prod",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "env": {
+    "dev": {
+      "name": "club-dev",
+      "workers_dev": true,
+      "preview_urls": false,
+      // vars and ratelimits aren't inherited from the top level: they go in each environment.
+      "vars": { "TURNSTILE_SITE_KEY": "REPLACE_WITH_TURNSTILE_SITE_KEY" },
+      "ratelimits": [
+        { "name": "SIGN_IN_LIMIT", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } }
+      ],
+      "durable_objects": { "bindings": [{ "name": "CARD_WATCH", "class_name": "CardWatch" }] },
+      "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CardWatch"] }],
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "club-dev",
+          "database_id": "00000000-0000-0000-0000-000000000001",
+          "migrations_dir": "migrations"
+        }
+      ]
+    }
+  }
+}

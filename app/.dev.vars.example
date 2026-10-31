@@ -1,0 +1,22 @@
+# Secrets for developing locally.
+# Copy to .dev.vars (Git ignores it). Never put production keys here.
+# `npm run setup` copies it. See ../docs/implementacion/entorno.md, paso 6.
+
+# DNI hash key, for testing only.
+# Generate your own with: openssl rand -base64 32
+DNI_HMAC_KEY=replace-with-a-test-key
+
+# Staff PIN hash key, for testing only.
+# Generate your own with: openssl rand -base64 32
+PIN_HMAC_KEY=replace-with-another-test-key
+
+# Keys to sign sessions, for testing only. One for customers and another for staff:
+# changing one signs out everyone of that kind. Generate each one with: openssl rand -base64 32
+CUSTOMER_SESSION_KEY=replace-with-another-test-key-customer
+STAFF_SESSION_KEY=replace-with-another-test-key-staff
+
+# Turnstile test secret key: always lets through.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+
+# Turnstile site key, for testing: always lets through. In dev and prod it goes in wrangler.jsonc.
+TURNSTILE_SITE_KEY=1x00000000000000000000AA

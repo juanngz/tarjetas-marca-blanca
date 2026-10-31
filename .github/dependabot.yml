@@ -1,0 +1,26 @@
+# Un pull request por semana con las actualizaciones agrupadas. Ver docs/implementacion/ci-cd.md
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /app
+    target-branch: dev
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      dependencias:
+        patterns: ["*"]
+    commit-message:
+      prefix: "Actualizar dependencias"
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      acciones:
+        patterns: ["*"]
+    commit-message:
+      prefix: "Actualizar acciones"

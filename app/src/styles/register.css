@@ -1,0 +1,2563 @@
+/* The register (caja): the team, standing, with a queue, on their own phone. A band of color on top, so
+   it's always clear this is the register and not the customer's app; the rest on the page's background, like the customer's.
+   Its big buttons are 72px (toque-caja). */
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--premio);
+  color: var(--tinta-fuerte);
+  font-family: var(--display);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.avatar--big {
+  width: 48px;
+  height: 48px;
+  font-size: 1.375rem;
+}
+
+/* A slim band of the theme's color: secundario for a barista, acento for the manager. The café's wordmark
+   (brand/wordmark-light.svg), and its symbol, faint, coming in from the bottom edge. */
+.register-bar {
+  --banda: var(--secundario-hondo);
+  --banda-honda: var(--secundario-oscuro);
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  border-radius: 0 0 22px 22px;
+  background:
+    radial-gradient(120% 160% at 0% 0%, rgb(255 255 255 / 0.12), transparent 55%),
+    linear-gradient(160deg, var(--banda) 30%, var(--banda-honda));
+  color: var(--tarjeta-texto);
+  box-shadow: 0 12px 24px -18px color-mix(in srgb, var(--banda-honda) 90%, black);
+  --foco: var(--tarjeta-texto);
+}
+
+/* Only when the register opens: changing screens, the bar is already there (RegisterBar.tsx). */
+.register-bar--comes-in {
+  animation: band-in 520ms var(--ease-out) backwards;
+}
+
+.register-bar--manager {
+  --banda: var(--acento);
+  --banda-honda: var(--acento-oscuro);
+}
+
+/* The symbol is cut at the bar's edge; the menu isn't: it's in the page's top layer. */
+.register-bar__symbol {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.register-bar__symbol::after {
+  content: "";
+  position: absolute;
+  bottom: -58px;
+  left: 38%;
+  width: 130px;
+  height: 106px;
+  background: url("/brand/symbol-light.svg") center / contain no-repeat;
+  opacity: 0.13;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+
+@keyframes band-in {
+  from {
+    transform: translateY(-24px);
+  }
+}
+
+.register-bar__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2) var(--espacio-3);
+  width: 100%;
+  max-width: var(--ancho-lectura);
+  margin: 0 auto;
+  padding: calc(var(--espacio-2) + env(safe-area-inset-top)) var(--espacio-3) var(--espacio-2)
+    var(--espacio-4);
+}
+
+/* The logo, as a link: tall enough to tap, the wordmark as it was. */
+.register-bar__home {
+  display: flex;
+  align-items: center;
+  min-height: var(--toque-minimo);
+  border-radius: var(--radio-chico);
+}
+
+.register-bar__wordmark {
+  display: block;
+  width: 96px;
+  height: auto;
+}
+
+.register-bar__end {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  min-width: 0;
+}
+
+.register-bar__who {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  min-width: 0;
+  margin: 0;
+}
+
+.register-bar__name {
+  font-size: var(--app-dato-size);
+  line-height: 1.3;
+  font-weight: 600;
+  color: var(--tarjeta-texto);
+  overflow-wrap: anywhere;
+}
+
+.register-bar .avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  background: var(--tarjeta-texto);
+  color: var(--banda-honda);
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 0.18);
+}
+
+/* On a narrow phone, with ← Volver, who is the initial; their name is still said. */
+@media (max-width: 389px) {
+  .back ~ .register-bar__end .register-bar__name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .register-bar .back ~ .register-bar__home .register-bar__wordmark {
+    width: 84px;
+  }
+}
+
+.register-bar .back {
+  color: var(--tarjeta-texto);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .register-bar .back:hover {
+    background: rgb(255 255 255 / 0.12);
+  }
+}
+
+/* Their name, as the menu's button: a soft pill on the band, with the arrow that says it opens. */
+.staff-menu__open {
+  min-height: var(--toque-minimo);
+  padding: 0 var(--espacio-2) 0 6px;
+  border: 1px solid rgb(255 255 255 / 0.28);
+  border-radius: var(--radio-total);
+  background: rgb(255 255 255 / 0.1);
+  color: var(--tarjeta-texto);
+  font-family: var(--sans);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    transform 120ms var(--ease-out),
+    background-color 150ms var(--ease-out),
+    border-color 150ms var(--ease-out);
+}
+
+.staff-menu__chevron {
+  display: flex;
+  flex: none;
+  transition: transform 200ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .staff-menu__open:hover {
+    border-color: rgb(255 255 255 / 0.6);
+  }
+}
+
+.staff-menu__open:active {
+  border-color: rgb(255 255 255 / 0.6);
+  background: rgb(255 255 255 / 0.2);
+  transform: scale(0.97);
+}
+
+/* Open: on an older phone without popover (RegisterBar.tsx), and on the others. Rules apart: a selector a
+   browser doesn't know drops the whole rule. */
+.staff-menu__open[aria-expanded="true"] {
+  border-color: rgb(255 255 255 / 0.6);
+  background: rgb(255 255 255 / 0.2);
+}
+
+.staff-menu__open[aria-expanded="true"] .staff-menu__chevron {
+  transform: rotate(180deg);
+}
+
+.register-bar:has(.staff-menu:popover-open) .staff-menu__open {
+  border-color: rgb(255 255 255 / 0.6);
+  background: rgb(255 255 255 / 0.2);
+}
+
+.register-bar:has(.staff-menu:popover-open) .staff-menu__chevron {
+  transform: rotate(180deg);
+}
+
+/* The menu: a paper card under the name, aligned with the bar's right edge. Where the browser can anchor
+   it to the button it does; otherwise it sits at the same place, under the bar. */
+.staff-menu {
+  position: fixed;
+  inset: auto;
+  top: calc(env(safe-area-inset-top) + 72px);
+  right: max(var(--espacio-3), (100vw - var(--ancho-lectura)) / 2 + var(--espacio-3));
+  width: max-content;
+  min-width: 12rem;
+  margin: 0;
+  padding: var(--espacio-1);
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+  background: var(--fondo-elevado);
+  color: var(--tinta);
+  box-shadow: var(--sombra-3);
+  /* On paper again: the ink's focus ring, not the band's light one. */
+  --foco: var(--tinta-fuerte);
+  transform-origin: top right;
+  transition:
+    opacity 160ms var(--ease-out),
+    transform 160ms var(--ease-out),
+    overlay 160ms allow-discrete,
+    display 160ms allow-discrete;
+}
+
+@supports (anchor-name: --a) {
+  .staff-menu__open {
+    anchor-name: --staff-menu;
+  }
+
+  .staff-menu {
+    position-anchor: --staff-menu;
+    top: calc(anchor(bottom) + var(--espacio-2));
+    right: anchor(right);
+  }
+}
+
+.staff-menu[popover]:not(:popover-open) {
+  opacity: 0;
+  transform: scale(0.96) translateY(-4px);
+}
+
+@starting-style {
+  .staff-menu:popover-open {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+}
+
+/* An older phone doesn't know popover and would show the menu open: closed until JavaScript takes it. */
+@supports not selector(:popover-open) {
+  .staff-menu[popover] {
+    display: none;
+  }
+}
+
+.staff-menu[hidden] {
+  display: none;
+}
+
+.staff-menu form {
+  display: contents;
+}
+
+.staff-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  width: 100%;
+  min-height: var(--toque-principal);
+  padding: 0 var(--espacio-4);
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--tinta-fuerte);
+  font-family: var(--sans);
+  font-size: var(--app-dato-size);
+  font-weight: var(--app-boton-weight);
+  line-height: 1;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 150ms var(--ease-out);
+}
+
+/* Both icons in the same box, so Equipo and Salir start at the same place. */
+.staff-menu__item > svg {
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .staff-menu__item:hover {
+    background: var(--fondo-tono);
+  }
+}
+
+.staff-menu__item:active {
+  background: var(--fondo-tono-fuerte);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-bar--comes-in {
+    animation: none;
+  }
+
+  .staff-menu,
+  .staff-menu__open,
+  .staff-menu__chevron {
+    transition: none;
+  }
+
+  .staff-menu:not(:popover-open),
+  .staff-menu__open:active {
+    transform: none;
+  }
+
+  @starting-style {
+    .staff-menu:popover-open {
+      transform: none;
+    }
+  }
+}
+
+.screen--register {
+  padding-top: var(--espacio-6);
+}
+
+/* The sign-in to the register: the badge and the PIN, on the page's background. */
+.screen--sign-in {
+  padding-top: calc(var(--espacio-8) + env(safe-area-inset-top));
+}
+
+.screen--sign-in .brand-badge {
+  margin-bottom: 0;
+}
+
+.field--pin {
+  -webkit-text-security: disc;
+  letter-spacing: 0.4em;
+}
+
+.field--pin-shown {
+  -webkit-text-security: none;
+}
+
+/* A field with a button inside, on its right: the PIN's eye. */
+.field-with-action {
+  position: relative;
+}
+
+.field-with-action .field {
+  width: 100%;
+  padding-right: calc(var(--toque-minimo) + var(--espacio-3));
+}
+
+.field-action {
+  position: absolute;
+  top: 50%;
+  right: var(--espacio-2);
+  display: grid;
+  place-items: center;
+  width: var(--toque-minimo);
+  height: var(--toque-minimo);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--tinta-suave);
+  cursor: pointer;
+  touch-action: manipulation;
+  transform: translateY(-50%);
+  transition: background-color 160ms var(--ease-out);
+}
+
+.field-action:active {
+  background: var(--fondo-hundido);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .field-action:hover {
+    color: var(--tinta-fuerte);
+  }
+}
+
+/* The customer's name, the first thing the barista checks. */
+.register-name {
+  font-family: var(--display);
+  font-size: var(--caja-nombre-size);
+  line-height: var(--caja-nombre-line-height);
+  font-weight: var(--caja-nombre-weight);
+  letter-spacing: -0.01em;
+  color: var(--tinta-fuerte);
+  overflow-wrap: anywhere;
+}
+
+.customer-head {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+}
+
+.customer-head .avatar {
+  background: var(--fondo-tono-fuerte);
+}
+
+.button--register {
+  gap: var(--espacio-3);
+  min-height: var(--toque-caja);
+  font-size: var(--caja-accion-size);
+  line-height: var(--caja-accion-line-height);
+  font-weight: var(--caja-accion-weight);
+}
+
+.card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  padding-top: var(--espacio-2);
+}
+
+.card__actions > form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* The reward, big in its notice: so the barista gives the discount and charges right. */
+.big-reward {
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 1.5px dashed var(--acento);
+  border-radius: var(--radio-medio);
+  background: var(--premio-suave);
+  color: var(--acento);
+  font-family: var(--display);
+  font-size: var(--app-subtitulo-size);
+  line-height: var(--app-subtitulo-line-height);
+  font-weight: var(--app-subtitulo-weight);
+}
+
+/* ───────────────────────── Confirmation (receipt) ───────────────────────── */
+
+.screen--done {
+  justify-content: space-between;
+  min-height: 100dvh;
+  padding-top: calc(var(--espacio-12) + env(safe-area-inset-top));
+}
+
+.done {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--espacio-6);
+}
+
+.done__mark {
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--secundario-hondo);
+  color: var(--sobre-secundario);
+  box-shadow:
+    0 0 0 8px color-mix(in srgb, var(--secundario) 18%, transparent),
+    var(--sombra-2);
+}
+
+.done__mark svg {
+  width: 44px;
+  height: 44px;
+}
+
+.done__mark--reward {
+  background: var(--acento);
+  box-shadow:
+    0 0 0 8px color-mix(in srgb, var(--acento) 18%, transparent),
+    var(--sombra-2);
+}
+
+.done__mark--undo {
+  background: var(--fondo-tono-fuerte);
+  color: var(--tinta-fuerte);
+  box-shadow: 0 0 0 8px var(--fondo-tono);
+}
+
+.title--with-icon {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.title--with-icon svg {
+  flex-shrink: 0;
+}
+
+.done__news {
+  font-size: var(--app-cuerpo-grande-size);
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+/* Like a receipt: raised paper, a torn dotted edge on top, what happened to whom. */
+.done__detail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding: var(--espacio-6);
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  box-shadow: var(--sombra-2);
+}
+
+.done__who {
+  font-family: var(--display);
+  font-size: var(--app-subtitulo-size);
+  line-height: var(--app-subtitulo-line-height);
+  font-weight: var(--app-subtitulo-weight);
+  color: var(--tinta-fuerte);
+}
+
+.done__detail .counter {
+  padding: var(--espacio-3) 0;
+  border-block: 1.5px dashed var(--filete);
+}
+
+.done .label {
+  color: var(--tinta-suave);
+}
+
+.inline-link--on-card {
+  align-self: center;
+  gap: var(--espacio-2);
+  color: var(--tarjeta-texto);
+}
+
+.inline-link--undo {
+  gap: var(--espacio-2);
+  margin-top: var(--espacio-1);
+  color: var(--tinta-suave);
+  text-decoration-color: var(--filete);
+}
+
+/* ───────────────────────── Scanner ───────────────────────── */
+
+.scanner {
+  position: relative;
+  height: 360px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--tarjeta-1);
+  color: var(--tarjeta-texto);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.12),
+    var(--sombra-3);
+}
+
+/* Off: warm paper, not a black box (the bar already carries the color). The frame's corners in acento and,
+   in the middle, the Club's seal turning slowly around the camera's button. */
+.scanner--off {
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  border: 1.5px solid rgb(255 255 255 / 0.8);
+  background:
+    radial-gradient(70% 60% at 50% 42%, var(--premio-suave), transparent 70%),
+    linear-gradient(180deg, var(--superficie), var(--fondo-tono));
+  color: var(--tinta-fuerte);
+  box-shadow: var(--sombra-2);
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms var(--ease-out);
+}
+
+.scanner--off:active {
+  transform: scale(0.985);
+}
+
+.scanner__start {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-4);
+  font-family: var(--display);
+  font-size: var(--caja-accion-size);
+  line-height: var(--caja-accion-line-height);
+  font-weight: 500;
+  text-align: center;
+}
+
+.seal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 148px;
+  height: 148px;
+  color: var(--acento);
+}
+
+.seal__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  fill: currentColor;
+  animation: seal-turn 24s linear infinite;
+}
+
+@keyframes seal-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The camera's button: an ink disc that breathes slowly, so it's clear it's waiting for a tap. */
+.seal__core {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--accion);
+  color: var(--sobre-accion);
+  box-shadow:
+    0 0 0 0 color-mix(in srgb, var(--acento) 40%, transparent),
+    var(--sombra-boton);
+  animation: breathe 2.4s var(--ease-out) infinite;
+}
+
+.seal__core svg {
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes breathe {
+  70% {
+    box-shadow:
+      0 0 0 18px color-mix(in srgb, var(--acento) 0%, transparent),
+      var(--sombra-boton);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 color-mix(in srgb, var(--acento) 0%, transparent),
+      var(--sombra-boton);
+  }
+}
+
+.scanner--off:active .seal__core {
+  transform: scale(0.94);
+}
+
+.scanner__camera,
+.scanner__video {
+  width: 100%;
+  height: 100%;
+}
+
+.scanner__video {
+  object-fit: cover;
+}
+
+.scanner__frame {
+  --esquina: 40px;
+  --trazo: 4px;
+  position: absolute;
+  inset: 48px 64px 88px;
+  border-radius: 8px;
+  background:
+    linear-gradient(var(--tarjeta-texto) 0 0) top left / var(--esquina) var(--trazo),
+    linear-gradient(var(--tarjeta-texto) 0 0) top left / var(--trazo) var(--esquina),
+    linear-gradient(var(--tarjeta-texto) 0 0) top right / var(--esquina) var(--trazo),
+    linear-gradient(var(--tarjeta-texto) 0 0) top right / var(--trazo) var(--esquina),
+    linear-gradient(var(--tarjeta-texto) 0 0) bottom left / var(--esquina) var(--trazo),
+    linear-gradient(var(--tarjeta-texto) 0 0) bottom left / var(--trazo) var(--esquina),
+    linear-gradient(var(--tarjeta-texto) 0 0) bottom right / var(--esquina) var(--trazo),
+    linear-gradient(var(--tarjeta-texto) 0 0) bottom right / var(--trazo) var(--esquina);
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* While reading: a soft line goes up and down inside the frame. */
+.scanner:not(.scanner--off) .scanner__frame::after {
+  content: "";
+  position: absolute;
+  inset: 8px 8px auto;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--premio);
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--premio) 60%, transparent);
+  animation: scan-line 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes scan-line {
+  to {
+    transform: translateY(calc(360px - 48px - 88px - 18px));
+  }
+}
+
+.scanner__hint {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  padding: var(--espacio-3) var(--espacio-4);
+  background: color-mix(in srgb, var(--tarjeta-1) 78%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+
+.scanner--off .scanner__frame {
+  --esquina: 32px;
+  inset: 28px;
+  opacity: 0.55;
+  background:
+    linear-gradient(var(--acento) 0 0) top left / var(--esquina) var(--trazo),
+    linear-gradient(var(--acento) 0 0) top left / var(--trazo) var(--esquina),
+    linear-gradient(var(--acento) 0 0) top right / var(--esquina) var(--trazo),
+    linear-gradient(var(--acento) 0 0) top right / var(--trazo) var(--esquina),
+    linear-gradient(var(--acento) 0 0) bottom left / var(--esquina) var(--trazo),
+    linear-gradient(var(--acento) 0 0) bottom left / var(--trazo) var(--esquina),
+    linear-gradient(var(--acento) 0 0) bottom right / var(--esquina) var(--trazo),
+    linear-gradient(var(--acento) 0 0) bottom right / var(--trazo) var(--esquina);
+  background-repeat: no-repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal__ring,
+  .seal__core,
+  .scanner:not(.scanner--off) .scanner__frame::after {
+    animation: none;
+  }
+}
+
+/* Buscar tarjeta, always under the camera: a rounded bar like a phone's search, raised paper, with the
+   magnifier, the field and a round ink button to go. The whole bar lights up when it's being typed in. */
+.finder {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.finder__label {
+  color: var(--tinta-suave);
+  font-weight: 600;
+}
+
+.finder__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  min-height: var(--toque-caja);
+  padding: var(--espacio-2) var(--espacio-2) var(--espacio-2) var(--espacio-4);
+  border: 1.5px solid var(--borde-campo);
+  border-radius: var(--radio-total);
+  background: var(--superficie);
+  box-shadow: var(--sombra-1);
+  transition:
+    border-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+
+.finder__bar > svg {
+  flex: none;
+  color: var(--acento);
+}
+
+.finder__bar:focus-within {
+  border-color: var(--tinta-fuerte);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--acento) 22%, transparent),
+    var(--sombra-2);
+}
+
+.finder__bar--invalid {
+  border-color: var(--error);
+}
+
+.finder__field {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--toque-minimo);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta-fuerte);
+  font: inherit;
+  font-size: var(--app-cuerpo-grande-size, 1.25rem);
+  outline: none;
+}
+
+.finder__field::placeholder {
+  color: var(--tinta-suave);
+  opacity: 1;
+}
+
+.finder__go {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accion);
+  color: var(--sobre-accion);
+  box-shadow: var(--sombra-boton);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms var(--ease-out);
+}
+
+.finder__go:active {
+  transform: scale(0.92);
+}
+
+.finder__go .button__arrow {
+  width: 26px;
+  height: 26px;
+}
+
+.screen--add-stamp {
+  gap: var(--espacio-6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finder__bar,
+  .finder__go {
+    transition: none;
+  }
+
+  .finder__go:active {
+    transform: none;
+  }
+}
+
+/* The confirmation in a sheet over the register (08/10/2026), with the X to close it at the top right. */
+.sheet--done .done {
+  padding-bottom: var(--espacio-6);
+}
+
+.sheet__close {
+  position: absolute;
+  top: var(--espacio-3);
+  right: var(--espacio-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toque-minimo);
+  height: var(--toque-minimo);
+  border-radius: var(--radio-total);
+  background: var(--fondo-hundido);
+  color: var(--tinta-fuerte);
+  touch-action: manipulation;
+}
+
+/* ───────────────────────── Search results ───────────────────────── */
+
+.found {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-12);
+}
+
+.found__customer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.found__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.found__count {
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+/* Several customers (08/10/2026): each one a box that opens, close together. */
+.found:has(.found__customer--closing) {
+  gap: var(--espacio-3);
+}
+
+.found__customer--closing {
+  padding: var(--espacio-2);
+  border: var(--trazo-campo) solid var(--borde-campo);
+  border-radius: var(--radio-medio);
+  background: var(--fondo-elevado);
+}
+
+.found__customer--closing .found__cards {
+  padding: 0 var(--espacio-2) var(--espacio-2);
+}
+
+.found__head {
+  margin: 0;
+  font: inherit;
+}
+
+.found__toggle {
+  width: 100%;
+  min-height: var(--toque-principal);
+  padding: var(--espacio-2);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.found__arrow {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--tinta);
+  transition: transform 150ms var(--ease-out);
+}
+
+.found__toggle[aria-expanded="true"] .found__arrow {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .found__arrow {
+    transition: none;
+  }
+}
+
+/* A card as a slim strip in its color: what it is and how far on the left, Sumar sello on the right.
+   The four of a customer fit on one screen. They come in one after another, like cards dealt. */
+.found-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3) var(--espacio-3) var(--espacio-3) var(--espacio-4);
+  border-radius: 20px;
+  color: var(--tarjeta-texto);
+  box-shadow: var(--sombra-2);
+  animation: row-in 420ms var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+.found-card__info {
+  display: flex;
+  flex: 999 1 9rem;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  min-width: 0;
+  min-height: var(--toque-minimo);
+  color: inherit;
+  text-decoration: none;
+}
+
+.found-card__name {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.125rem;
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--tarjeta-texto);
+}
+
+.found-card__count {
+  margin: 0;
+  color: var(--label-color);
+}
+
+.found-card__count strong {
+  font-family: var(--display);
+  font-size: var(--app-subtitulo-size);
+  font-weight: 500;
+  color: var(--tarjeta-texto);
+}
+
+.found-card__reward {
+  color: var(--reward-color);
+  font-weight: 600;
+}
+
+.found-card .progress {
+  margin-top: var(--espacio-1);
+}
+
+/* Beside the info; with big text, under it and as wide as the card. */
+.found-card__actions {
+  display: flex;
+  flex: 1 1 auto;
+  gap: var(--espacio-2);
+  min-width: 0;
+}
+
+.found-card__form {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* With a reward, two buttons: under the text, sharing the width. Canjear premio in the reward's color. */
+.found-card--reward .found-card__actions {
+  flex-basis: 100%;
+  flex-wrap: wrap;
+}
+
+.found-card--reward .found-card__actions > * {
+  flex-basis: 8rem;
+}
+
+.found-card__action--reward {
+  background: var(--premio);
+}
+
+/* Sumar sello: a light pill on the card, 72px like every register button. */
+.found-card__action {
+  display: inline-flex;
+  flex: 1 1 0;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  min-height: var(--toque-caja);
+  padding: 0 var(--espacio-4);
+  border: 0;
+  border-radius: 16px;
+  background: var(--tarjeta-texto);
+  color: var(--tinta-fuerte);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.6) inset,
+    0 8px 16px -10px rgb(0 0 0 / 0.6);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 120ms var(--ease-out);
+}
+
+.found-card__action:active {
+  transform: scale(0.95);
+}
+
+.found-card--reward .found-card__action {
+  gap: var(--espacio-1);
+  padding-inline: var(--espacio-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .found-card {
+    animation: none;
+  }
+
+  .found-card__action {
+    transition: none;
+  }
+
+  .found-card__action:active {
+    transform: none;
+  }
+}
+
+/* ───────────────────────── Team ───────────────────────── */
+
+/* Each role has its color, the same as the bar's: secundario for a barista, acento for the manager. */
+.team-row--barista,
+.person-card--barista,
+.role-chip--barista {
+  --rol: var(--secundario-hondo);
+  --rol-suave: color-mix(in srgb, var(--secundario) 18%, var(--superficie));
+}
+
+.team-row--manager,
+.person-card--manager,
+.role-chip--manager {
+  --rol: var(--acento);
+  --rol-suave: var(--premio-suave);
+}
+
+.team-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+/* Equipo's top: a card in acento with the team's faces overlapping, like people around the counter. */
+.team-hero {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  padding: var(--espacio-6) var(--espacio-4);
+  overflow: hidden;
+  border-radius: var(--radio-grande);
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgb(255 255 255 / 0.1), transparent 55%),
+    linear-gradient(
+      150deg,
+      color-mix(in srgb, var(--acento) 12%, var(--superficie)),
+      var(--premio-suave)
+    );
+  box-shadow: var(--sombra-2);
+}
+
+.team-hero::after {
+  content: "";
+  position: absolute;
+  right: -30px;
+  bottom: -40px;
+  width: 140px;
+  height: 114px;
+  background: url("/brand/symbol.svg") center / contain no-repeat;
+  opacity: 0.08;
+  transform: rotate(-14deg);
+  pointer-events: none;
+}
+
+.team-hero__text {
+  display: flex;
+  flex: 1 1 10rem;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.team-hero__title {
+  margin: 0;
+  font-family: var(--display);
+  font-size: var(--app-subtitulo-size);
+  line-height: var(--app-subtitulo-line-height);
+  font-weight: 500;
+  color: var(--acento);
+  letter-spacing: 0.01em;
+}
+
+.team-hero__summary {
+  margin: 0;
+  font-family: var(--display);
+  font-size: var(--app-titulo-size);
+  line-height: var(--app-titulo-line-height);
+  font-weight: 500;
+  color: var(--tinta-fuerte);
+}
+
+.team-hero__more {
+  margin: 0;
+  color: var(--tinta-suave);
+}
+
+.faces {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  padding-left: 10px;
+}
+
+.faces__face {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-left: -10px;
+  border-radius: 50%;
+  background: var(--secundario-hondo);
+  color: var(--tarjeta-texto);
+  font-family: var(--display);
+  font-size: 1.125rem;
+  font-weight: 500;
+  box-shadow: 0 0 0 3px var(--superficie);
+  animation: face-in 480ms var(--ease-out) backwards;
+}
+
+.faces__face:nth-child(2) {
+  animation-delay: 60ms;
+}
+
+.faces__face:nth-child(3) {
+  animation-delay: 120ms;
+}
+
+.faces__face:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+.faces__face:nth-child(n + 5) {
+  animation-delay: 240ms;
+}
+
+.faces__face--manager {
+  background: var(--acento);
+}
+
+.faces__face--more {
+  background: var(--fondo-tono-fuerte);
+  color: var(--tinta-fuerte);
+  font-family: var(--sans);
+  font-size: 1rem;
+}
+
+@keyframes face-in {
+  from {
+    transform: translateX(-8px) scale(0.85);
+  }
+}
+
+/* Agregar barista: a free place in the team, dashed like an empty slot waiting for a card. */
+.add-tile {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  min-height: var(--toque-caja);
+  padding: var(--espacio-4);
+  border: 2px dashed color-mix(in srgb, var(--acento) 55%, transparent);
+  border-radius: var(--radio-grande);
+  background: color-mix(in srgb, var(--premio-suave) 55%, transparent);
+  color: var(--acento);
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    transform 120ms var(--ease-out),
+    background-color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out);
+}
+
+.add-tile:active {
+  transform: scale(0.98);
+  background: var(--premio-suave);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .add-tile:hover {
+    border-color: var(--acento);
+    background: var(--premio-suave);
+  }
+
+  .add-tile:hover .add-tile__plus {
+    transform: rotate(90deg);
+  }
+}
+
+.add-tile__plus {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--acento);
+  color: var(--tarjeta-texto);
+  box-shadow: 0 6px 14px -8px var(--acento);
+  transition: transform 240ms var(--ease-out);
+}
+
+.add-tile__text {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faces__face {
+    animation: none;
+  }
+
+  .add-tile,
+  .add-tile__plus {
+    transition: none;
+  }
+
+  .add-tile:active,
+  .add-tile:hover .add-tile__plus {
+    transform: none;
+  }
+}
+
+/* Activos / De baja: a segmented control, the current one raised like a card. */
+.tabs {
+  display: grid;
+  /* Side by side; with big text, one over the other. */
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--espacio-1);
+  padding: var(--espacio-1);
+  border-radius: 28px;
+  background: var(--fondo-hundido);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--sombra-tinte) 10%, transparent);
+}
+
+.tabs__tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  min-height: var(--toque-minimo);
+  border-radius: var(--radio-total);
+  color: var(--tinta-suave);
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    background-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.tabs__tab[aria-current="page"] {
+  background: var(--superficie);
+  color: var(--tinta-fuerte);
+  box-shadow: var(--sombra-1);
+}
+
+.tabs__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 var(--espacio-2);
+  border-radius: var(--radio-total);
+  background: var(--fondo-tono-fuerte);
+  color: var(--tinta-fuerte);
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabs__tab[aria-current="page"] .tabs__count {
+  background: var(--accion);
+  color: var(--sobre-accion);
+}
+
+.team-search {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rows come in one after another, like cards dealt on the counter. */
+.team-list > li {
+  animation: row-in 420ms var(--ease-out) backwards;
+  animation-delay: calc(min(var(--i, 0), 8) * 45ms);
+}
+
+/* Only movement, no fading: the text is readable (and measurable) from the first frame. */
+@keyframes row-in {
+  from {
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+.team-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  min-height: var(--toque-caja);
+  padding: var(--espacio-4);
+  padding-left: calc(var(--espacio-4) + 4px);
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  color: inherit;
+  box-shadow: var(--sombra-2);
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    transform 120ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+}
+
+/* A stripe of the role's color on the left edge, like the spine of a card. */
+.team-row::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--rol);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .team-row:hover {
+    box-shadow: var(--sombra-3);
+  }
+}
+
+.team-row:active {
+  transform: scale(0.98);
+}
+
+.team-row .avatar {
+  background: var(--rol);
+  color: var(--tarjeta-texto);
+}
+
+.team-row--inactive {
+  background: var(--fondo-elevado);
+  box-shadow: var(--sombra-1);
+}
+
+.team-row--inactive::before {
+  background: var(--filete);
+}
+
+.team-row--inactive .avatar {
+  background: var(--fondo-tono-fuerte);
+  color: var(--tinta-suave);
+}
+
+.team-row__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.team-row__name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-1) var(--espacio-2);
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+.team-row__email {
+  color: var(--tinta-suave);
+  overflow-wrap: anywhere;
+}
+
+.team-row__arrow {
+  flex-shrink: 0;
+  color: var(--tinta-suave);
+  transition: transform 160ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .team-row:hover .team-row__arrow {
+    transform: translateX(3px);
+  }
+}
+
+/* The role, as a small pill in its color. */
+.role-chip,
+.state-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px var(--espacio-3);
+  border-radius: var(--radio-total);
+  font-size: 1rem;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.role-chip {
+  /* At 200%, with a wide font, the word breaks before it goes past the row's edge. */
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  background: var(--rol-suave);
+  color: var(--rol);
+}
+
+/* Whoever is looking, so they find themselves on the list. */
+.role-chip--you {
+  background: var(--fondo-hundido);
+  color: var(--tinta-fuerte);
+}
+
+.state-chip {
+  gap: var(--espacio-2);
+  background: color-mix(in srgb, var(--secundario) 14%, var(--superficie));
+  color: var(--secundario-hondo);
+}
+
+.state-chip::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.state-chip--off {
+  background: var(--fondo-hundido);
+  color: var(--tinta-suave);
+}
+
+/* A person's page: their card on top, in their role's color. */
+.person-card {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-6) var(--espacio-4);
+  overflow: hidden;
+  border-radius: var(--radio-grande);
+  background:
+    radial-gradient(90% 120% at 100% 0%, var(--rol-suave), transparent 70%), var(--superficie);
+  box-shadow: var(--sombra-2);
+}
+
+.person-card::after {
+  content: "";
+  position: absolute;
+  right: -28px;
+  bottom: -30px;
+  width: 120px;
+  height: 98px;
+  background: url("/brand/symbol.svg") center / contain no-repeat;
+  opacity: 0.07;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.person-card__avatar {
+  width: 72px;
+  height: 72px;
+  font-size: 2rem;
+  background: var(--rol);
+  color: var(--tarjeta-texto);
+  box-shadow: 0 0 0 6px var(--rol-suave);
+}
+
+.person-card--inactive .person-card__avatar {
+  background: var(--fondo-tono-fuerte);
+  color: var(--tinta-suave);
+  box-shadow: 0 0 0 6px var(--fondo-hundido);
+}
+
+.person-card__text {
+  display: flex;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  min-width: 0;
+}
+
+.person-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+  margin: 0;
+}
+
+.person-card__email {
+  margin: 0;
+  color: var(--tinta-suave);
+  overflow-wrap: anywhere;
+}
+
+/* What can be done with a person: one row each, like a phone's settings. */
+.action-list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  box-shadow: var(--sombra-2);
+  list-style: none;
+}
+
+.action-list > li + li {
+  border-top: 1px solid var(--linea);
+}
+
+.action-list form {
+  display: flex;
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  width: 100%;
+  min-height: var(--toque-caja);
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 0;
+  background: transparent;
+  color: var(--tinta-fuerte);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 160ms var(--ease-out);
+}
+
+.action-row:active {
+  background: var(--fondo-hundido);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .action-row:hover {
+    background: var(--fondo-elevado);
+  }
+}
+
+.action-row__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--premio-suave);
+  color: var(--acento);
+}
+
+.action-row__text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.action-row__hint {
+  color: var(--tinta-suave);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.action-row__arrow {
+  flex: none;
+  color: var(--tinta-suave);
+}
+
+.action-row--danger {
+  color: var(--error);
+}
+
+.action-row--danger .action-row__icon {
+  background: var(--error-suave);
+  color: var(--error);
+}
+
+/* The history, as a line of dots: what happened, when and who did it. */
+.timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  margin: 0;
+  padding: var(--espacio-4) var(--espacio-4) var(--espacio-4) var(--espacio-8);
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  box-shadow: var(--sombra-1);
+  list-style: none;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: var(--espacio-6);
+  bottom: var(--espacio-6);
+  left: calc(var(--espacio-4) + 5px);
+  width: 2px;
+  background: var(--linea);
+}
+
+.timeline__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline__item::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: calc(-1 * var(--espacio-8) + var(--espacio-4));
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--premio);
+  box-shadow: 0 0 0 3px var(--superficie);
+}
+
+.timeline__item--deactivated::before {
+  background: var(--error);
+}
+
+.timeline__item--reactivated::before,
+.timeline__item--added::before {
+  background: var(--secundario);
+}
+
+.timeline__what {
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+.timeline__when {
+  color: var(--tinta-suave);
+}
+
+/* Movimientos: whose to see, as chips that wrap; the current one filled, in its role's color. */
+.who-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
+
+.who-filter__chip {
+  --rol: var(--accion);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--toque-minimo);
+  padding: 0 var(--espacio-4);
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-total);
+  background: var(--superficie);
+  color: var(--tinta-fuerte);
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    background-color 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+
+.who-filter__chip--barista {
+  --rol: var(--secundario-hondo);
+}
+
+.who-filter__chip--manager {
+  --rol: var(--acento);
+}
+
+.who-filter__chip[aria-current="page"] {
+  border-color: var(--rol);
+  background: var(--rol);
+  color: var(--sobre-accion);
+}
+
+/* The history, one receipt line each: what, on which card and whose, when and who. */
+.activity {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  box-shadow: var(--sombra-1);
+  list-style: none;
+}
+
+.activity__item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--espacio-4) var(--espacio-4) var(--espacio-4) var(--espacio-8);
+}
+
+.activity__item + .activity__item {
+  border-top: 1px solid var(--linea);
+}
+
+/* A dot in the color of what happened: a stamp secundario, a redeem the reward's, an undo red. */
+.activity__item::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--espacio-4) + 8px);
+  left: var(--espacio-4);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--secundario);
+}
+
+.activity__item--redeem::before {
+  background: var(--premio);
+}
+
+.activity__item--undo-stamp::before,
+.activity__item--undo-redeem::before {
+  background: var(--error);
+}
+
+.activity__what {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-2);
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+.activity__card,
+.activity__when {
+  color: var(--tinta-suave);
+}
+
+.activity__item--undone .activity__title,
+.activity__item--undone .activity__card {
+  text-decoration: line-through;
+}
+
+/* Resumen (11/10/2026): the days in one row on top, the four numbers, then a box per question with the sentence
+   that says what matters and its chart. One color, the café's, lighter to darker for more. */
+.screen--summary {
+  gap: var(--espacio-6);
+}
+
+.summary-top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.summary-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  transition: opacity 160ms var(--ease-out);
+}
+
+/* Other dates on their way: the numbers stay, dimmed. */
+.summary-body--loading {
+  opacity: 0.55;
+}
+
+/* The days: a segmented row. Otras opens a panel over the screen. */
+.date-filter {
+  position: relative;
+  display: flex;
+  gap: var(--espacio-1);
+  padding: var(--espacio-1);
+  border-radius: var(--radio-medio);
+  background: var(--fondo-hundido);
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--sombra-tinte) 8%, transparent);
+}
+
+.date-filter__option {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--toque-minimo);
+  padding: 0 var(--espacio-2);
+  border-radius: calc(var(--radio-medio) - 4px);
+  color: var(--tinta-fuerte);
+  font-size: 1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition:
+    background-color 160ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+
+.date-filter__option:active {
+  transform: scale(0.97);
+}
+
+.date-filter__option[aria-current="true"] {
+  background: var(--superficie);
+  box-shadow: var(--sombra-1);
+}
+
+.date-filter__option svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  transition: transform 200ms var(--ease-out);
+}
+
+.date-filter__more {
+  display: flex;
+  flex: 1 1 0;
+}
+
+.date-filter__more > summary {
+  list-style: none;
+}
+
+.date-filter__more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.date-filter__more[open] > summary svg {
+  transform: rotate(180deg);
+}
+
+.date-filter__panel {
+  position: absolute;
+  top: calc(100% + var(--espacio-2));
+  right: 0;
+  left: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  box-shadow: var(--sombra-3);
+  animation: date-panel-in 200ms var(--ease-out);
+  transform-origin: top right;
+}
+
+@keyframes date-panel-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .date-filter__panel {
+    animation: none;
+  }
+}
+
+/* Closed, nothing of it takes room (Chrome lays out a closed details' content). */
+.date-filter__more:not([open]) .date-filter__panel {
+  display: none;
+}
+
+.date-filter__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-3);
+}
+
+.date-filter__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  min-width: 0;
+}
+
+.date-filter__field .field {
+  min-height: var(--toque-principal);
+  padding: 0 var(--espacio-2);
+  font-size: 1rem;
+}
+
+/* The four numbers: a 2 × 2 grid of tiles. */
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-3);
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  box-shadow: var(--sombra-1);
+}
+
+.stat__label {
+  font-size: 1rem;
+  line-height: 1.25;
+  color: var(--tinta-suave);
+}
+
+.stat dd {
+  margin: 0;
+}
+
+.stat__value {
+  order: -1;
+  font-family: var(--display);
+  font-size: var(--app-contador-size);
+  line-height: var(--app-contador-line-height);
+  font-weight: var(--app-contador-weight);
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-fuerte);
+}
+
+.stat__note {
+  margin-top: auto;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--acento);
+}
+
+/* A box per question. */
+.summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  box-shadow: var(--sombra-1);
+}
+
+.summary-section__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.summary-section__title {
+  font-family: var(--display);
+  font-size: max(var(--app-etiqueta-size), 1rem);
+  line-height: var(--app-etiqueta-line-height);
+  font-weight: var(--app-etiqueta-weight);
+  letter-spacing: var(--app-etiqueta-tracking);
+  text-transform: uppercase;
+  color: var(--acento);
+}
+
+.summary-section__headline {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--tinta-fuerte);
+  text-wrap: pretty;
+}
+
+/* The tables of Resumen: numbers lined up, hairlines between rows. */
+.period-table,
+.card-table,
+.heatmap {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.period-table thead,
+.card-table thead,
+.heatmap thead,
+.heatmap tfoot {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tinta-suave);
+}
+
+.period-table thead th,
+.card-table thead th {
+  padding-bottom: var(--espacio-2);
+}
+
+.card-table tbody tr {
+  border-top: 1px solid var(--linea);
+}
+
+.period-table tbody tr + tr {
+  border-top: 1px solid var(--linea);
+}
+
+/* Day by day: the name, a bar with its stamps, and the new customers in their own column. */
+.period-table td,
+.period-table tbody th {
+  height: 40px;
+  padding-block: 2px;
+}
+
+.period-table thead th {
+  text-align: left;
+}
+
+.period-table th[scope="row"] {
+  width: 1px;
+  padding-right: var(--espacio-3);
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+  color: var(--tinta);
+}
+
+.period-table__stamps {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.period-table__bar {
+  width: calc(var(--share) * (100% - 3em));
+  height: 18px;
+  border-radius: 0 4px 4px 0;
+  background: var(--acento);
+}
+
+.period-table__unit {
+  display: none;
+}
+
+.period-table__value {
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+.period-table .period-table__new {
+  width: 1px;
+  padding-left: var(--espacio-3);
+  text-align: right;
+  color: var(--tinta-suave);
+}
+
+/* Per card: a column per card, a row per number. */
+.card-table {
+  font-size: 1rem;
+}
+
+.card-table tbody th,
+.card-table tbody td {
+  padding-block: var(--espacio-2);
+}
+
+.card-table thead th {
+  width: 19%;
+  vertical-align: bottom;
+  text-align: right;
+  line-height: 1.25;
+}
+
+.card-table tbody th {
+  padding-right: var(--espacio-2);
+  font-weight: 400;
+  text-align: left;
+  color: var(--tinta);
+}
+
+.card-table tbody td {
+  font-weight: 600;
+  text-align: right;
+  color: var(--tinta-fuerte);
+}
+
+/* Days and hours: a cell per hour and day, the café's color lighter to darker for more. */
+.summary-section:has(.heatmap) {
+  padding-inline: var(--espacio-3);
+}
+
+.heatmap {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.heatmap tbody td,
+.heatmap tfoot td {
+  height: 34px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.heatmap tfoot th,
+.heatmap tfoot td {
+  padding-top: var(--espacio-2);
+}
+
+.heatmap tbody td {
+  background: var(--fondo-hundido);
+  font-weight: 600;
+  color: var(--tinta-fuerte);
+}
+
+.heatmap thead td,
+.heatmap th[scope="row"] {
+  width: 2.5em;
+}
+
+.heatmap thead th {
+  text-align: center;
+}
+
+.heatmap th[scope="row"] {
+  padding-right: var(--espacio-1);
+  font-weight: 400;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.heatmap__date {
+  display: block;
+  font-weight: 400;
+}
+
+.heatmap th.heatmap__foot {
+  padding-top: var(--espacio-3);
+  font-weight: 400;
+  text-align: left;
+}
+
+.heatmap td[data-level="0"] {
+  background: color-mix(in srgb, var(--fondo-hundido) 55%, transparent);
+}
+
+.heatmap td[data-level="1"] {
+  background: color-mix(in srgb, var(--acento) 16%, var(--superficie));
+}
+
+.heatmap td[data-level="2"] {
+  background: color-mix(in srgb, var(--acento) 32%, var(--superficie));
+}
+
+.heatmap td[data-level="3"] {
+  background: color-mix(in srgb, var(--acento) 52%, var(--superficie));
+}
+
+.heatmap td[data-level="4"] {
+  background: var(--acento);
+  color: var(--fondo);
+}
+
+/* Weeks and months have long names ("27 sep al 3 oct"): the name and the new customers on one line, the bar
+   below across the whole width. The same when there's no room (below). */
+.period-table.period-table--stacked thead {
+  display: none;
+}
+
+.period-table.period-table--stacked tbody tr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--espacio-3);
+  padding-block: var(--espacio-2);
+}
+
+.period-table.period-table--stacked td,
+.period-table.period-table--stacked th[scope="row"] {
+  width: auto;
+  height: auto;
+}
+
+.period-table.period-table--stacked th[scope="row"] {
+  flex: 1 1 auto;
+}
+
+.period-table.period-table--stacked td:has(.period-table__stamps) {
+  flex: 1 1 100%;
+  order: 1;
+}
+
+.period-table.period-table--stacked .period-table__new {
+  width: auto;
+  padding-left: 0;
+}
+
+.period-table.period-table--stacked .period-table__unit {
+  display: inline;
+}
+
+/* Shown only when there's no room (below). */
+.card-table__card,
+.heatmap-narrow {
+  display: none;
+}
+
+/* Big text (200%) or a narrow phone: the days in two rows, the numbers one under the other, the tables as
+   lists, and a bar per day and per hour instead of the grid. */
+@media (max-width: 339px) {
+  .date-filter {
+    flex-wrap: wrap;
+  }
+
+  .date-filter__option,
+  .date-filter__more {
+    flex-basis: 40%;
+  }
+
+  .date-filter__fields,
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .date-filter__panel {
+    padding: var(--espacio-3);
+  }
+
+  .date-filter__panel .button {
+    padding-inline: var(--espacio-2);
+  }
+
+  .summary-section .card-table thead {
+    display: none;
+  }
+
+  .summary-section .period-table thead {
+    display: none;
+  }
+
+  .summary-section .period-table tbody tr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: var(--espacio-3);
+    padding-block: var(--espacio-2);
+  }
+
+  .summary-section .period-table td,
+  .summary-section .period-table th[scope="row"] {
+    width: auto;
+    height: auto;
+  }
+
+  .summary-section .period-table th[scope="row"] {
+    flex: 1 1 auto;
+  }
+
+  .summary-section .period-table td:has(.period-table__stamps) {
+    flex: 1 1 100%;
+    order: 1;
+  }
+
+  .summary-section .period-table .period-table__new {
+    width: auto;
+    padding-left: 0;
+  }
+
+  .summary-section .period-table .period-table__unit {
+    display: inline;
+  }
+
+  .summary-section .card-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--espacio-2);
+  }
+
+  .summary-section .card-table tbody th,
+  .summary-section .card-table tbody td {
+    padding-block: 0;
+  }
+
+  .summary-section .card-table tbody th {
+    font-weight: 600;
+    color: var(--tinta-fuerte);
+  }
+
+  .summary-section .card-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--espacio-2);
+  }
+
+  .card-table__card {
+    display: inline;
+    font-weight: 400;
+    color: var(--tinta);
+  }
+
+  .heatmap-narrow {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espacio-4);
+  }
+
+  .heatmap {
+    display: none;
+  }
+}
+
+/* A row per bar: its name, the bar and its number at the tip (components/BarChart.tsx). Thin bars, square at
+   the start and round at the tip, in the café's color; the number in ink, never in the bar's color. */
+/* The names in a column as wide as the longest one, shared by every row (subgrid). */
+.bar-chart {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--espacio-2) var(--espacio-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar-chart__row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+}
+
+/* A phone without subgrid (before 2023): a column as wide as "miércoles" or "Canjeados". */
+@supports not (grid-template-columns: subgrid) {
+  .bar-chart__row {
+    grid-template-columns: 6.5em 1fr;
+    gap: var(--espacio-3);
+  }
+}
+
+.bar-chart__label {
+  color: var(--tinta);
+}
+
+.bar-chart__track {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  min-height: 28px;
+  border-left: 1px solid var(--filete);
+}
+
+.bar-chart__bar {
+  /* Room left for the number at the tip. */
+  width: calc(var(--share) * (100% - 3.5em));
+  height: 20px;
+  border-radius: 0 4px 4px 0;
+  background: var(--acento);
+}
+
+.bar-chart__value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-fuerte);
+}
+
+/* Long names (a card's) go above their bar. */
+.bar-chart--long {
+  grid-template-columns: 1fr;
+}
+
+.bar-chart--long .bar-chart__row {
+  grid-template-columns: 1fr;
+  gap: var(--espacio-1);
+}
+
+.bar-chart--long .bar-chart__label {
+  margin-top: var(--espacio-2);
+}
+
+.inline-link--center {
+  align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-row,
+  .scanner--off,
+  .tabs__tab,
+  .team-row__arrow {
+    transition: none;
+  }
+
+  .team-list > li {
+    animation: none;
+  }
+
+  .team-row:active,
+  .scanner--off:active,
+  .team-row:hover .team-row__arrow {
+    transform: none;
+  }
+}
+
+/* The PIN, once, big enough to read it out, each digit in its own box. */
+.shown-pin {
+  padding: var(--espacio-6) var(--espacio-4);
+  border: 1.5px dashed var(--borde-campo);
+  border-radius: var(--radio-grande);
+  background: var(--superficie);
+  font-family: var(--sans);
+  font-size: min(var(--titulo-pieza-size), 13vw);
+  line-height: var(--app-codigo-line-height);
+  font-weight: var(--app-codigo-weight);
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-fuerte);
+  text-align: center;
+  box-shadow: var(--sombra-1);
+}
+
+/* ───────────────────────── Waiting for the server ───────────────────────── */
+
+/* A thin bar at the top while something is on its way (the database is in the EU). It shows only after a
+   moment, so a quick answer doesn't flash. */
+.register-loading {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 50;
+  height: 4px;
+  overflow: hidden;
+  opacity: 0;
+  animation: loading-in 1ms linear 150ms forwards;
+}
+
+.register-loading::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  border-radius: var(--radio-total);
+  background: var(--secundario-hondo);
+  animation: loading-run 1100ms var(--ease-out) infinite;
+}
+
+@keyframes loading-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loading-run {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(260%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .register-loading::before {
+    width: 100%;
+    animation: none;
+  }
+}

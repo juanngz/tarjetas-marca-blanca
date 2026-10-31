@@ -1,0 +1,168 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": ["**", "!worker-configuration.d.ts", "!public", "!migrations", "!.impeccable"]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/core/**", "src/cafes/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "**/platform/**",
+                      "**/routes/**",
+                      "**/components/**",
+                      "drizzle-orm",
+                      "drizzle-orm/**",
+                      "react",
+                      "react-*",
+                      "react-router",
+                      "wrangler",
+                      "**/application/**",
+                      "**/web/**"
+                    ],
+                    "message": "core/ and cafes/ are pure rules and config: they only import each other. See docs/implementacion/arquitectura.md, \"Qui\u00e9n puede usar a qui\u00e9n\"."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/application/**", "!src/application/**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "**/platform/**",
+                      "**/routes/**",
+                      "**/components/**",
+                      "drizzle-orm",
+                      "drizzle-orm/**",
+                      "react",
+                      "react-*",
+                      "react-router",
+                      "wrangler",
+                      "**/web/**"
+                    ],
+                    "message": "application/ only knows core/, cafes/ and its ports: the adapters live in platform/. See docs/implementacion/arquitectura.md, \"Qui\u00e9n puede usar a qui\u00e9n\"."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/components/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["**/platform/**", "**/application/**", "**/routes/**"],
+                    "message": "components/ only draws: never the database, secrets or use cases. See docs/implementacion/arquitectura.md, \"Qui\u00e9n puede usar a qui\u00e9n\"."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/routes/**", "!src/routes/**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["**/platform/**", "!**/platform/app.server"],
+                    "message": "routes/ reach the use cases through platform/app.server.ts, the composition root. See docs/implementacion/arquitectura.md, \"Qui\u00e9n puede usar a qui\u00e9n\"."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/web/**", "!src/web/**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "**/platform/**",
+                      "**/application/**",
+                      "**/routes/**",
+                      "**/components/**",
+                      "drizzle-orm",
+                      "drizzle-orm/**"
+                    ],
+                    "message": "web/ is what routes share that isn't visual (forms, URLs): plain functions over Request, FormData and URL. See docs/implementacion/arquitectura.md, \"Qui\u00e9n puede usar a qui\u00e9n\"."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

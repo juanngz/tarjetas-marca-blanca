@@ -1,0 +1,11 @@
+node_modules/
+build/
+.react-router/
+.wrangler/
+.dev.vars
+*.tsbuildinfo
+worker-configuration.d.ts
+
+# End-to-end tests (Playwright)
+test-results/
+playwright-report/
