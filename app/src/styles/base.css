@@ -711,6 +711,13 @@ svg {
   animation-delay: 240ms;
 }
 
+/* A café with a single card: in the middle, barely tilted, not in the first place of the fan. */
+.card-fan__card:only-child {
+  --rot: -4deg;
+  --x: -50%;
+  --y: 14px;
+}
+
 .card-fan__card {
   transform: translate(var(--x), var(--y)) rotate(var(--rot));
 }
