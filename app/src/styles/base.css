@@ -204,7 +204,8 @@ svg {
 /* The Club's name, big: uppercase and the key word in italics (cafes/, club.highlight). */
 .brand-title {
   font-family: var(--display);
-  font-size: min(3rem, 13vw);
+  /* The theme's size, but never wider than the phone: a long word ("COMUNIDAD") fits whole down to 320px. */
+  font-size: min(var(--titulo-pieza-size), 10vw);
   line-height: 1;
   font-weight: 400;
   letter-spacing: 0.01em;
